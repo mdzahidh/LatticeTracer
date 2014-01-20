@@ -1,0 +1,9 @@
+6th June, 2009
+----------------
+AlphaTransfer is defined as a function of data and position
+ColorTransfer is defined as a function of data position and normal.
+
+However, when shadow rays are computed, normals passed into the ColorTransfer is
+set as (0,0,0). We are ignoring color transfer due to normal for shadow computation.
+This is only done for the sake of rendering speed for the moment.
+

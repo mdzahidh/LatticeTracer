@@ -1,0 +1,84 @@
+ExperimentType = TRACED # Random/Traced
+
+MainGridIdx = 1 #
+
+NumberOfGrids = 2 #
+
+[Grid0]
+	Name = HAM 
+	Type = CC
+	DataType    = FUNCTION
+	
+	DataFunction = HAM		
+[]
+
+[Grid1]
+	Name    = ML_sampled # Give it some name without space. Follow variable naming convention
+	Type    = CC # BCC or CC
+	DataType    = FILE # Function/File, For "Function", "Normal" will always be "Function". For "File", "Normal" can be either "File" or "Function"
+	NormalType  = FUNCTION # Estimate/File, For "File" it uses the NormalXFile, NormalYFile and NormalZFile. For "Estimate" is uses the "NormalEstimatorFiler"
+	ReconstructionFilter = CC_TRICUBICBSPLINE
+	NormalReconstructionFilter = CC_TRICUBICBSPLINE
+	NormalEstimatorFilter = CC_NORMAL_CD_4TH # Name of the filter to be used for normal estimator.	EPSILON = central difference with the epsilon
+	
+	DataFunction = HAM # Nothing
+	FunctionEvaluateMin  = '-1 -1 -1'
+	FunctionEvaluateMax  = '1 1 1'
+	FunctionEvaluateGrid = '101 101 101'
+	
+	Epsilon = 0.05
+	XScale  = 0.02
+	YScale  = 0.02
+	ZScale  = 0.02
+	
+	
+	[./Data]
+		DataFormat  = FLOAT
+		ScalarFile  = data/pfHAM_CC_101.vud # .vud file to be loaded
+		NormalXFile = data/dnML_BCC_28_x.vud # .vud file for the Normal X
+		NormalYFile = data/dnML_BCC_28_y.vud # .vud file for the Normal Y
+		NormalZFile = data/dnML_BCC_28_z.vud # .vud file for the Normal Z
+		
+	[../]
+	GridPointDumpFile = Sample_ML_grid.txt # name of the file to be used for only grid point data
+[]
+
+
+[Output]	 
+	Image = HAM_CC_sampled_101_pre-4th.bmp
+[]
+	
+[Camera]
+       Type = PERSPECTIVE
+       FOV  = 30.0
+       NearPlane = 1
+       FarPlane  = 1000
+       Position  = '0 -1.9 0.5'
+       Up        = '0 0 1'
+       LookAt    = '0 0 0'
+[]
+
+
+[Tracer]
+       Resolution    = '512 512'
+       Preview       = ON
+       Shadowed      = OFF
+       NumLights     = 2
+       SamplingRate  = 100
+       TwoSidedLighting	= OFF
+       SuperSampling = ON
+       ShadowOffset  = 25
+       AlphaTransfer = AlphaHAM
+       ColorTransfer = ColorHAM
+[]
+
+	
+[Light0]
+       Position = '0 1 -1 0'
+       Color    = '1 1 1 1'
+[]
+	
+#[Light1]
+#       Position = '0 1 -1 0'
+#       Color    = '0.5 0.5 0.5 1'
+#[]

@@ -1,0 +1,50 @@
+ExperimentType = TRACED
+
+NumberOfGrids = 1 
+
+MainGridIdx = 0 
+
+[Grid0]
+	Name = HAM 
+	Type = BCC
+	DataType    = FUNCTION
+	
+	DataFunction = HAM		
+[]
+
+[Output]	
+	Image = ham_pretty_test.bmp
+[]
+	
+[Camera]
+       Type = PERSPECTIVE
+       FOV  = 30.0
+       NearPlane = 1
+       FarPlane  = 1000
+       Position  = '0 -1.9 0.6'
+       Up        = '0 0 1'
+       LookAt    = '0 0 0'
+[]
+
+
+[Tracer]
+       Resolution    = '512 512'
+       Preview       = OFF
+       Shadowed      = ON
+       NumLights     = 2
+       SamplingRate  = 500
+       TwoSidedLighting	= OFF
+       SuperSampling = OFF  
+       ShadowOffset  = 2
+       ShadowAmbient = '0.25 0.25 0.25 0'
+       Ambient       = '0.2 0.2 0.2 0'
+       AlphaTransfer = AlphaHAM
+       ColorTransfer = ColorHAM
+[]
+
+	
+[Light0]
+       Position = '-1 1 -1 0'
+       Color    = '1 1 1 1'
+[]
+

@@ -1,0 +1,56 @@
+ExperimentType = TRACED
+
+NumberOfGrids = 1 
+
+MainGridIdx = 0 
+
+[Grid0]
+	Name = ML 
+	Type = BCC
+	DataType    = SAMPLED
+	
+	ReconstructionFilter = BCC_QUINTIC_BOX_SPLINE
+	NormalReconstructionFilter = BCC_QUINTIC_BOX_SPLINE
+	NormalEstimatorFilter = BCC_NORMAL_SOCD 
+	
+	DataFunction = ML
+	FunctionEvaluateMin  = '-1 -1 -1'
+	FunctionEvaluateMax  = '1 1 1'
+	FunctionEvaluateGrid = '40 40 80'	
+[]
+
+[Output]
+#TracedDumpFile = mlobb.txt
+	Image = mlobb_sampled_socd_on_the_fly.bmp
+[]
+	
+[Camera]
+	Type = PERSPECTIVE
+	FOV  = 30.0
+	NearPlane = 1
+	FarPlane  = 1000
+	Position  = '0 -3 3'
+	Up        = '0 1 0'
+	LookAt    = '0 0 0'
+[]
+		 
+[Tracer]
+	Mode	      = ISR
+	IsoSurface    = 0.5
+	IsoSurfaceThreshold = 0.0000005
+	Resolution    = '400 400'
+	Preview       = ON
+	Shadowed      = OFF
+	NumLights     = 1
+	SuperSampling = ON
+	SamplingRate  = 120
+	ShadowOffset  = 25
+	AlphaTransfer = AlphaUnity
+	ColorTransfer = ColorModel
+[]
+
+[Light0]
+	Position = '0 0.4 -1 0'
+	Color    = '1 1 1 1'
+[]	
+	

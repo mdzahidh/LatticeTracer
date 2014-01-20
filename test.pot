@@ -1,0 +1,68 @@
+ExperimentType = TRACED # Random/Traced
+
+MainGridIdx = 0 #
+
+NumberOfGrids = 1 #
+
+[Grid1]
+	Name    = ML_sampled # Give it some name without space. Follow variable naming convention
+	Type    = CC # BCC or CC
+	DataType    = FILE # Function/File, For "Function", "Normal" will always be "Function". For "File", "Normal" can be either "File" or "Function"
+	NormalType  = FUNCTION # Estimate/File, For "File" it uses the NormalXFile, NormalYFile and NormalZFile. For "Estimate" is uses the "NormalEstimatorFiler"
+	ReconstructionFilter = CC_TRICUBICBSPLINE
+	NormalReconstructionFilter = EPSILON	
+	
+	DataFunction = ML # Nothing
+	FunctionEvaluateMin  = '-1 -1 -1'
+	FunctionEvaluateMax  = '1 1 1'
+	FunctionEvaluateGrid = '41 41 82'
+	
+	Epsilon = 0.003174603174603
+	XScale  = 0.051282051
+	YScale  = 0.051282051
+	ZScale  = 0.051282051
+	
+	
+	[./Data]
+		DataFormat  = FLOAT
+		ScalarFile  = data/pfML_CC_40.vud # .vud file to be loaded
+		NormalXFile = data/dnML_BCC_28_x.vud # .vud file for the Normal X
+		NormalYFile = data/dnML_BCC_28_y.vud # .vud file for the Normal Y
+		NormalZFile = data/dnML_BCC_28_z.vud # .vud file for the Normal Z
+		
+	[../]
+	GridPointDumpFile = Sample_ML_grid.txt # name of the file to be used for only grid point data
+[]
+
+
+[Output]	 
+	Image = ML_CC_sampled_40_epsilon_0.003174603174603.bmp
+[]
+	
+[Camera]
+	Type = PERSPECTIVE
+	FOV  = 30.0
+	NearPlane = 1
+	FarPlane  = 1000
+	Position  = '0 -3 3'
+	Up        = '0 1 0'
+	LookAt    = '0 0 0'
+[]
+		 
+[Tracer]
+	Resolution    = '512 512'
+	Preview       = ON
+	Shadowed      = OFF
+	TwoSidedLighting = ON
+	SuperSampling = ON
+	NumLights     = 1
+	SamplingRate  = 1000
+	ShadowOffset  = 25
+	AlphaTransfer = AlphaML
+	ColorTransfer = ColorModel
+[]
+
+[Light0]
+	Position = '0 0.4 -1 0'
+	Color    = '1 1 1 1'
+[]	

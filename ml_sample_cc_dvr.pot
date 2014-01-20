@@ -1,0 +1,81 @@
+ExperimentType = TRACED
+Seed = -1
+
+#Number of random samples for Random type experiment
+RandomSamples = 10000000
+
+#The minimum extent of the bounding box for the random experiment
+RandomBoundingBoxMin = '-1 -1 -1'
+
+#The maximum extent of the bounding box for the random experiment
+RandomBoundingBoxMax = '1 1 1'
+
+
+NumberOfGrids = 1
+
+MainGridIdx = 0
+
+[Grid0]
+	Name = ML
+	Type = CC
+	DataType    = FILE
+	NormalType = FUNCTION
+
+	ReconstructionFilter = CC_TRICUBICBSPLINE
+	NormalReconstructionFilter = CC_TRICUBICBSPLINE
+	NormalEstimatorFilter = CC_NORMAL_CD_4TH
+	OnTheFlyNormals = OFF
+
+	DataFunction = ML
+	FunctionEvaluateMin  = '-1 -1 -1'
+	FunctionEvaluateMax  = '1 1 1'
+	FunctionEvaluateGrid = '40 40 80'
+
+	XScale = 0.051282051
+        YScale = 0.051282051
+        ZScale = 0.051282051
+
+	[./Data]
+		DataFormat  = FLOAT
+		ScalarFile  = data/MLCC/40_data.vud
+	[../]
+
+
+#	GridPointDumpFile = new_grid.txt
+[]
+
+[Output]
+#	TracedDumpFile = mlobb_bcd_fly_new.txt
+	Image = mlobb_sampled_cc_4th.bmp
+[]
+
+[Camera]
+	Type = PERSPECTIVE
+	FOV  = 30.0
+	NearPlane = 1
+	FarPlane  = 1000
+	Position  = '0 -3 3'
+	Up        = '0 1 0'
+	LookAt    = '0 0 0'
+[]
+
+[Tracer]
+	Mode	      = DVR
+	IsoSurface    = 0.5
+	IsoSurfaceThreshold = 0.005
+	Resolution    = '400 400'
+	Preview       = OFF
+	Shadowed      = OFF
+	NumLights     = 1
+	SuperSampling = OFF
+	SamplingRate  = 200
+	ShadowOffset  = 25
+	AlphaTransfer = AlphaML
+	ColorTransfer = ColorModel
+[]
+
+[Light0]
+	Position = '0 0.4 -1 0'
+	Color    = '1 1 1 1'
+[]
+

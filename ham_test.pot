@@ -1,0 +1,56 @@
+ExperimentType = TRACED
+
+NumberOfGrids = 1 
+
+MainGridIdx = 0 
+
+[Grid0]
+	Name = HAM 
+	Type = BCC
+	DataType    = FUNCTION
+	
+	DataFunction = HAM		
+[]
+
+[Output]
+	Image = ham_multi.bmp
+[]
+	
+[Camera]
+       Type = PERSPECTIVE
+       FOV  = 30.0
+       NearPlane = 1
+       FarPlane  = 1000
+       Position  = '0 -2.5 0.5'
+       Up        = '0 0 1'
+       LookAt    = '0 0 0'
+[]
+
+[Tracer]
+       Resolution    = '1024 1024'
+	   Mode          = DVR
+	   IsoSurface    = 0.5
+       Preview       = OFF
+       Shadowed      = ON
+       NumLights     = 1
+       SamplingRate  = 500
+       TwoSidedLighting	= OFF
+       SuperSampling = ON      
+       ShadowOffset  = 2
+       ShadowAmbient = '0.25 0.25 0.25 0'
+       Ambient       = '0.2 0.2 0.2 0'
+       AlphaTransfer = AlphaHAMMulti
+       ColorTransfer = ColorHAMMulti
+[]
+
+	
+[Light0]
+       Position = '0 1 -1 0'
+       Color    = '1 1 1 1'
+[]
+	
+#[Light1]
+#       Position = '0 1 -1 0'
+#       Color    = '0.5 0.5 0.5 1'
+#[]
+

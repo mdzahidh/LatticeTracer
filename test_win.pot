@@ -1,0 +1,60 @@
+ExperimentType = Traced # Random/Traced
+NumberOfGrids = 1 #
+MotherGridIndex = 0
+
+[Grid0]
+	Name = Karp_Fish_80x80x160 # Give it some name without space. Follow variable naming convention
+	Type = BCC # BCC or CC
+	DataType    = File # Function/File, For "Function", "Normal" will always be "Function". For "File", "Normal" can be either "File" or "Function"
+	NormalType  = Estimate # Estimate/File, For "File" it uses the NormalXFile, NormalYFile and NormalZFile. For "Estimate" is uses the "NormalEstimatorFiler"
+	ReconstructionFilter = BCC_QUINTIC_BOX_SPLINE
+	NormalEstimatorFilter = BCC_NORMAL_OPTIMAL26 # Name of the filter to be used for normal estimator.	EPSILON = central difference with the epsilon
+	
+	DataFunction = Dummy # Nothing
+	Epsilon = 0.00001
+	XScale  = 1
+	YScale  = 1
+	ZScale  = 1
+	
+	
+	[./Data]
+		ScalarFile  = data/karpfin/BCC/CC100_BCC_80.vud # .vud file to be loaded
+		NormalXFile = x.vud # .vud file for the Normal X
+		NormalYFile = y.vud # .vud file for the Normal Y
+		NormalZFile = z.vud # .vud file for the Normal Z
+		
+	[../]
+	GridPointDumpFile = Sample_ML_grid.txt # name of the file to be used for only grid point data
+[]
+
+[Output]
+	TracedDumpFile = traced.txt
+	Image = karp_quintic_box_spline_optimal26.bmp
+[]
+	
+[Camera]
+	Type = Perspective
+	FOV  = 70.0
+	NearPlane = 0.1
+	FarPlane  = 1000
+	Position  = '0 -130 0'
+	Up        = '1 0 0'
+	LookAt    = '0 0 0'
+[]
+		 
+[Tracer]
+	Resolution    = '320 200'
+	Preview       = On
+	Shadowed      = Off
+	NumLights     = 1
+	SamplingRate  = 10
+	ShadowOffset  = 25
+	AlphaTransfer = AlphaModel
+	ColorTransfer = ColorModel
+[]
+
+[Light0]
+	Position = '0 1 1 0'
+	Color    = '1 1 1 1'
+[]	
+	

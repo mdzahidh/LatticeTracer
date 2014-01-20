@@ -1,0 +1,158 @@
+ExperimentType = TRACED # TRACED/RANDOM
+
+# -1 = Automatic seed taken from the current time.
+# x : where x >= 0 for some specific seed
+Seed = -1
+
+#Number of random samples for Random type experiment
+RandomSamples = 1000
+
+#The minimum extent of the bounding box for the random experiment
+RandomBoundingBoxMin = '-1 -1 -1'
+
+#The maximum extent of the bounding box for the random experiment
+RandomBoundingBoxMax = '1 1 1'
+ 
+NumberOfGrids = 1
+
+
+#The index of the main grid, i.e. the grid that will be used
+#for ray tracing and the output image will of that of the 
+#MainGridIdx.
+MainGridIdx = 0 
+
+#There can be multiple grid sections, the name of the section should be
+#[Gridx] where x is any number between 0..NumberOfGrids-1
+[Grid0]
+		#Replace this with some name
+	Name = Sample_Name 
+
+		# BCC/CC/HYBRID 
+		#For hybrid grid, it stores two grid at the same time. The first grid is
+		#some function and the second grid is its sample version.
+		#While rendering, data values are taken from the function and normals
+		#are taken from the second (sampled) grid.
+	Type = BCC 
+	
+		#BCC/CC : Only useful when Type = HYBRID
+	SubType = BCC 
+
+		#FUNCTION/FILE/SAMPLED
+	DataType    = FILE 
+		
+		#FUNCTION/FILE/SAMPLED , Only for FILE the normals are read from 
+		#the files, otherwise they are estimated
+	NormalType  = FILE  
+
+		# BCC: BCC_QUNTIC_BOX_SPLINE/BCC_LINEAR_BOX_SPLINE
+		# CC:  CC_NEAREST/CC_TRILINEAR/CC_TRICUBICBSPLINE
+	ReconstructionFilter = BCC_QUINTIC_BOX_SPLINE 
+
+		# Common to all grid: EPSILON, where Epsilon field is used
+		# Otherwise, this is where the normal reconstruction filter
+		# is specified.
+		# BCC: BCC_QUNTIC_BOX_SPLINE/BCC_LINEAR_BOX_SPLINE
+		# CC:  CC_NEAREST/CC_TRILINEAR/CC_TRICUBICBSPLINE
+	NormalReconstructionFilter = BCC_QUINTIC_BOX_SPLINE
+		
+		# BCC: BCC_NORMAL_SOCD, BCC_NORMAL_BCD, BCC_NORMAL_SIZE_OPTIMAL16, BCC_NORMAL_OPTIMAL26
+		# CC : CC_NORMAL_CD
+	NormalEstimatorFilter = BCC_NORMAL_OPTIMAL26
+		   
+		# ON/OFF: This one tells the system whether to compute normals on the fly
+		# or to use the pre-computed ones. If the normals are read from file
+		# then this option is always assumed to be OFF
+	OnTheFlyNormals = ON
+	
+		# Spatial distance between samples in X, Y and Z direction
+	XScale = 0.074074074
+	YScale = 0.074074074
+	ZScale = 0.037037037
+
+		#BOUNDARY_CONDITION_ZERO/BOUNDARY_CONDITION_PERIODIC/BOUNDARY_CONDITION_MIRROR
+	BoundaryCondition = BOUNDARY_CONDITION_ZERO
+
+		# Name of the function. This is used when DataType is equal to FUNCTION or SAMPLED
+	DataFunction = ML	
+
+		# Parameter for the DataType = SAMPLED.
+	FunctionEvaluateMin  = '-1 -1 -1'
+	FunctionEvaluateMax  = '1 1 1'
+
+		# Grid dimension of the sampler. Note that samples are put on the boundaries too.
+	FunctionEvaluateGrid = '41 41 81'
+		
+		# Epsilon value to be used in epsilon mode
+	Epsilon = 0.00001
+	
+		# This section specifies all the data files
+	[./Data]
+			#This is very important and specifies the data type
+			#BYTE/FLOAT
+		DataFormat  = FLOAT
+		ScalarFile  = data/ML_BCC_28.vud # .vud file to be loaded
+		NormalXFile = data/dnML_BCC_28_x.vud # .vud file for the Normal X
+		NormalYFile = data/dnML_BCC_28_y.vud # .vud file for the Normal Y
+		NormalZFile = data/dnML_BCC_28_z.vud # .vud file for the Normal Z
+		
+	[../]
+		
+		# File used for dumping data only at the grid points
+		# Only useful when DataType = SAMPLED
+	GridPointDumpFile = Sample_grid.txt 
+[]
+
+# Specifies the output of the session
+[Output]
+		#The file where all the trace dump will be put
+		#Not providing this option will make the renderer not dump any data on the disk and
+		#hence only the image will be rendered and rendered fast!
+	TracedDumpFile = sample_usman.txt
+		
+		#Name of the 24-Bit BMP file where the image will be written
+		#Please note that tracing will be peformed only on 
+		#the MainGridIdx.	
+	Image = sample_usman.bmp
+[]
+	
+[Camera]
+	Type = Perspective
+	FOV  = 70.0
+	NearPlane = 0.5
+	FarPlane  = 1000
+	Position  = '0 -2 2'
+	Up        = '0 1 0'
+	LookAt    = '0 0 0'
+[]
+		 
+[Tracer]
+		#Mode values can be DVR (Direct Volume Rendering) or ISR (Iso-Surface Rendering)
+	Mode			= DVR
+		#IsoSurface is the value used for ISR rendering. Not useful for DVR
+	IsoSurface		= 0.5
+	Resolution    		= '800 600'
+	Preview       		= ON
+	Shadowed      		= OFF
+	TwoSidedLighting	= ON
+	Lighting			= ON
+	SuperSampling		= OFF
+	ShadowAmbient		= '0.3 0.3 0.3 0'
+	Ambient			= '0 0 0 0'
+	NumLights     		= 1
+	SamplingRate  		= 400
+	ShadowOffset  		= 25
+
+		#Specifies the Alpha and Color Transfers functions.
+		#The names must exist in the system. For reference open
+		#src/transferfunc.cpp
+	AlphaTransfer 		= AlphaML
+	ColorTransfer 		= ColorModel
+[]
+
+#There can be multiple sections on light. The name of this section should be
+#[Lightx] where x is any number between 0..[Tracer]/NumLights-1.
+[Light0]
+	Position = '-1 0 -1 0'
+	Color    = '1 1 1 1'
+[]	
+	

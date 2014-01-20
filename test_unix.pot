@@ -1,0 +1,74 @@
+ExperimentType = Traced # Traced/Random
+
+NumberOfGrids = 1
+
+MainGridIdx = 0 
+
+[Grid0]
+	Name = Sampled_ML_Usman 
+	Type = BCC
+	DataType    = File
+	NormalType  = File
+	ReconstructionFilter = BCC_QUINTIC_BOX_SPLINE
+	NormalEstimatorFilter = BCC_NORMAL_OPTIAM26 
+	
+	XScale = 0.074074074
+	YScale = 0.074074074
+	ZScale = 0.037037037
+
+	DataFunction = ML	
+	FunctionEvaluateMin  = '-1 -1 -1'
+	FunctionEvaluateMax  = '1 1 1'
+	FunctionEvaluateGrid = '41 41 81'
+		
+	Epsilon = 0.00001
+	
+	[./Data]
+		DataFormat  = Float
+		ScalarFile  = data/ML_BCC_28.vud # .vud file to be loaded
+		NormalXFile = data/dnML_BCC_28_x.vud # .vud file for the Normal X
+		NormalYFile = data/dnML_BCC_28_y.vud # .vud file for the Normal Y
+		NormalZFile = data/dnML_BCC_28_z.vud # .vud file for the Normal Z
+		
+	[../]
+[]
+
+[Grid1]
+	Name = ML 
+	Type = BCC
+	DataType    = Function
+	
+	DataFunction = ML		
+[]
+
+[Output]
+	TracedDumpFile = sample_usman.txt
+	Image = sample_usman.bmp
+[]
+	
+[Camera]
+	Type = Perspective
+	FOV  = 70.0
+	NearPlane = 0.5
+	FarPlane  = 1000
+	Position  = '0 -2 2'
+	Up        = '0 1 0'
+	LookAt    = '0 0 0'
+[]
+		 
+[Tracer]
+	Resolution    = '800 600'
+	Preview       = On
+	Shadowed      = Off
+	NumLights     = 1
+	SamplingRate  = 400
+	ShadowOffset  = 25
+	AlphaTransfer = AlphaML
+	ColorTransfer = ColorModel
+[]
+
+[Light0]
+	Position = '-1 0 -1 0'
+	Color    = '1 1 1 1'
+[]	
+	

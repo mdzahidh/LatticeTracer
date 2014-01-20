@@ -1,0 +1,141 @@
+ExperimentType = RANDOM # TRACED/RANDOM
+
+# -1 = Automatic seed taken from the current time.
+# x : where x >= 0 for some specific seed
+Seed = 200
+
+#Number of random samples for Random type experiment
+RandomSamples = 10000000
+
+#The minimum extent of the bounding box for the random experiment
+RandomBoundingBoxMin = '-0.7 -0.7 -0.7'
+
+#The maximum extent of the bounding box for the random experiment
+RandomBoundingBoxMax = '0.7 0.7 0.7'
+ 
+NumberOfGrids = 2
+
+
+#The index of the main grid, i.e. the grid that will be used
+#for ray tracing and the output image will of that of the 
+#MainGridIdx.
+MainGridIdx = 1 
+
+#There can be multiple grid sections, the name of the section should be
+#[Gridx] where x is any number between 0..NumberOfGrids-1
+[Grid0]
+		#Replace this with some name
+	Name = ML_Sampled 
+
+		# BCC/CC 
+	Type = BCC 
+
+		#FUNCTION/FILE/SAMPLED
+	DataType    = FILE 
+		
+		#FUNCTION/FILE/SAMPLED , Only for FILE the normals are read from 
+		#the files, otherwise they are estimated
+	NormalType  = FUNCTION  
+
+		# BCC: BCC_QUNTIC_BOX_SPLINE/BCC_LINEAR_BOX_SPLINE
+		# CC:  CC_NEAREST/CC_TRILINEAR/CC_TRICUBICBSPLINE
+	ReconstructionFilter = BCC_QUINTIC_BOX_SPLINE 
+
+		# Common to all grid: EPSILON, where Epsilon field is used
+		# Otherwise, this is where the normal reconstruction filter
+		# is specified.
+		# BCC: BCC_QUNTIC_BOX_SPLINE/BCC_LINEAR_BOX_SPLINE
+		# CC:  CC_NEAREST/CC_TRILINEAR/CC_TRICUBICBSPLINE
+	NormalReconstructionFilter = BCC_QUINTIC_BOX_SPLINE
+		
+		# BCC: BCC_NORMAL_SOCD, BCC_NORMAL_BCD, BCC_NORMAL_SIZE_OPTIMAL16, BCC_NORMAL_OPTIMAL26
+		# CC : CC_NORMAL_CD
+	NormalEstimatorFilter = BCC_NORMAL_SIZE_OPTIMAL16
+	
+		# Spatial distance between samples in X, Y and Z direction
+	XScale  = 0.063492063
+	YScale  = 0.063492063
+	ZScale  = 0.031746032
+
+		#BOUNDARY_CONDITION_ZERO/BOUNDARY_CONDITION_PERIODIC/BOUNDARY_CONDITION_MIRROR
+	BoundaryCondition = BOUNDARY_CONDITION_ZERO
+
+		# Name of the function. This is used when DataType is equal to FUNCTION or SAMPLED
+	DataFunction = ML	
+
+		# Parameter for the DataType = SAMPLED.
+	FunctionEvaluateMin  = '-1 -1 -1'
+	FunctionEvaluateMax  = '1 1 1'	
+	
+		# Grid dimension of the sampler. Note that samples are put on the boundaries too.
+	FunctionEvaluateGrid = '32 32 64'
+		
+		# Epsilon value to be used in epsilon mode
+	Epsilon = 0.00001
+	
+		# This section specifies all the data files
+	[./Data]
+			#This is very important and specifies the data type
+			#BYTE/FLOAT
+		DataFormat  = FLOAT
+		ScalarFile  = data/pfML_32.vud # .vud file to be loaded
+#		NormalXFile = data/dnML_BCC_28_x.vud # .vud file for the Normal X
+#		NormalYFile = data/dnML_BCC_28_y.vud # .vud file for the Normal Y
+#		NormalZFile = data/dnML_BCC_28_z.vud # .vud file for the Normal Z
+		
+	[../]
+		
+		# File used for dumping data only at the grid points
+		# Only useful when DataType = SAMPLED
+	GridPointDumpFile = Sample_grid.txt 
+[]
+
+[Grid1]
+	Name = ML
+	DataType = FUNCTION
+	DataFunction = ML
+[]
+
+# Specifies the output of the session
+[Output]
+		#The file where all the trace dump will be put
+	TracedDumpFile = random_results.txt
+		
+		#Name of the 24-Bit BMP file where the image will be written
+		#Please note that tracing will be peformed only on 
+		#the MainGridIdx.	
+	Image = random_results.bmp
+[]
+	
+[Camera]
+	Type = Perspective
+	FOV  = 70.0
+	NearPlane = 0.5
+	FarPlane  = 1000
+	Position  = '0 -2 2'
+	Up        = '0 1 0'
+	LookAt    = '0 0 0'
+[]
+		 
+[Tracer]
+	Resolution    = '800 600'
+	Preview       = On
+	Shadowed      = Off
+	NumLights     = 1
+	SamplingRate  = 400
+	ShadowOffset  = 25
+
+		#Specifies the Alpha and Color Transfers functions.
+		#The names must exist in the system. For reference open
+		#src/transferfunc.cpp
+	AlphaTransfer = AlphaML
+	ColorTransfer = ColorModel
+[]
+
+#There can be multiple sections on light. The name of this section should be
+#[Lightx] where x is any number between 0..[Tracer]/NumLights-1.
+[Light0]
+	Position = '-1 0 -1 0'
+	Color    = '1 1 1 1'
+[]	
+	
